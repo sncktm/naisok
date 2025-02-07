@@ -36,5 +36,26 @@ def handle_report():
 
     return jsonify({"status": "Call initiated", "call_sid": call.sid})
 
+
+# reportStatusの管理
+report_status = False  # 初期値はFalse
+
+# reportStatusを返すAPI
+@app.route('/get_report_status', methods=['GET'])
+def get_report_status():
+    global report_status
+    return jsonify({"reportStatus": report_status})
+
+# reportStatusを更新するAPI
+@app.route('/set_report_status', methods=['POST'])
+def set_report_status():
+    global report_status
+    data = request.get_json()
+    if 'status' in data:
+        report_status = data['status']
+        return jsonify({"status": "success", "reportStatus": report_status}), 200
+    else:
+        return jsonify({"status": "error", "message": "No status provided"}), 400
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
